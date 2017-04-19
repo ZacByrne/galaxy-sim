@@ -55,7 +55,7 @@ double dgravpotplum(double r, )
 //function of r and yn for midpoint
 double fry(double r, double y_n)
 {
-  fvalue = dgravpotplum(r)/vsteldelplum(r) - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum*y_n/vsteldelplum(r);
+  fvalue = -1*dgravpotplum(r) - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum*y_n/vsteldelplum(r);
   return fvalue
 }
 
@@ -79,7 +79,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
       yn = s;
       v_rarry[i]=yn;
       rn = i*h;
-      s = h*fry(rn+h/2, yn + h/2*fry(rn,yn));
+      s = h*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
       
    }
 
