@@ -79,7 +79,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
       yn = s;
       v_rarry[i]=yn;
       rn = i*h;
-      s = h*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
+      s = s + h*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
       
    }
 
