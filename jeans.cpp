@@ -86,6 +86,11 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
 
 int main(int argc, char** argv)
 {
+  //input from user?
+  //steps, start, end?
+  
+  double steps =2000;
+  std::vector<int> vrarray(steps);
   
   
   
