@@ -1,5 +1,5 @@
-//#include <iostream>
-//#include <fstream>
+#include <iostream>
+#include <fstream>
 #include <cmath>
 #include <vector>
 //#include <cassert>
@@ -49,41 +49,41 @@ double Mfuncplum(double r)
 }
 
 //derivative of gfravitational potential
-double dgravpotplum(double r, )
+double dgravpotplum(double r, double galmass )
 {
-  dphi = Gconst * Mfuncplum(r) * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3/2);
+  dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3/2);
   return dphi;
 }
 
 //function of r and yn for midpoint
-double fry(double r, double y_n)
+double fry(double r, double y_n, double galmass, double blackmass)
 {
-  fvalue = -1*dgravpotplum(r) - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum*y_n/vsteldelplum(r);
+  fvalue = -1*dgravpotplum(r,galmass) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum*y_n/vsteldelplum(r);
   return fvalue;
 }
 
-double integrate(double start, double end, double step)
-{
-  double s = 0;
-  double h = (end - start)/steps;
-  for (int i =0; i<steps; ++i)
-  {
-    //s += h* 
-  }
-}
+//double integrate(double start, double end, double step)
+//{
+ // double s = 0;
+//  double h = (end - start)/steps;
+//  for (int i =0; i<steps; ++i)
+//  {
+ //   //s += h* 
+//  }
+//}
 
-void midpointarray(std::vector<double>& v_rarray, double start, double end, double step)
+void midpointarray(std::vector<double>& v_rarray, double start, double end, double step, double galmass, double blackmass)
 {
   float s =0;
-  float h = (end - start)/steps;
+  float h = (end - start)/step;
   float yn = s;
-  for (int i =0; i<steps; ++i)
+  for (int i =0; i<step; ++i)
    {
       yn = s;
       v_rarry[i]=yn;
       rn = start + i*h;
-      s = s + h/2*fry(rn,yn);
-      s = yn + h*fry(rn+h/2, s);
+      s = s + h/2*fry(rn,yn, galmass, blackmass);
+      s = yn + h*fry(rn+h/2, s, galmass, blackmass));
       
       // changed to not recursive 
         //s = s + h/2*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
@@ -121,10 +121,18 @@ int main(int argc, char** argv)
   end = pluma;
   
   //vector array
-  std::vector<int> vrarray(steps);
+  std::vector<double> vrarray(steps);
   
-  midpointarray(vrarray, start, end, steps, blackmass
+  midpointarray(vrarray, start, end, steps, galmass, blackmass);
   
+  ofstream myfile;
+  myfile.open ("output.txt");
+  for (int i =0; i<steps; ++i)
+  {
+    myfile << ;
+    myfile.close();
+    return 0;
+  }
   
   
 
