@@ -8,11 +8,11 @@
 // NULL is gone, use nullptr
 double* me = nullptr;
 //double pluma = 1;
-double pi = 3.1415926535
+double pi = 3.1415926535;
 //GET VALUE FOR HOLGER
 
-double galmass = 1:
-double Gconst = 1;
+//double galmass = 1:
+double Gconst = 6.674*pow(10,-11);
 
 //rotational velocity
 double  rotvel(double r)
@@ -97,16 +97,33 @@ int main(int argc, char** argv)
   //steps, start, end?
   double pluma;
   double start;
+  double steps;
+  double galmass;
+  double blackmass;
   
+  //input values
   cout >> "Jean's equation simulation. \n Please input core radius (double).";
   cin >> pluma;
   
   cout >> "Please input start radius.";
   cin >> start;
   
+  cout >> "Please input no. steps";
+  cin >> steps;
+
+  cout >> "Please input Mass of Galaxy";
+  cin >> galmass;
   
-  double steps =2000;
+  cout >> "Please input additional black hole mass (0 for none)";
+  cin >> blackmass;
+  
+  //Check with holger about end of int being radius
+  end = pluma;
+  
+  //vector array
   std::vector<int> vrarray(steps);
+  
+  midpointarray(vrarray, start, end, steps, blackmass
   
   
   
