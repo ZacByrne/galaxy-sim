@@ -7,7 +7,7 @@
 
 // NULL is gone, use nullptr
 double* me = nullptr;
-double pluma = 1;
+//double pluma = 1;
 double pi = 3.1415926535
 //GET VALUE FOR HOLGER
 
@@ -95,6 +95,15 @@ int main(int argc, char** argv)
 {
   //input from user?
   //steps, start, end?
+  double pluma;
+  double start;
+  
+  cout >> "Jean's equation simulation. \n Please input core radius (double).";
+  cin >> pluma;
+  
+  cout >> "Please input start radius.";
+  cin >> start;
+  
   
   double steps =2000;
   std::vector<int> vrarray(steps);
