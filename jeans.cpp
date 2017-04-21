@@ -90,6 +90,8 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
         //s = s + h/2*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
       
    }
+}
+
 
 
 int main(int argc, char** argv)
