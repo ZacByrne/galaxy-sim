@@ -72,7 +72,7 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 //  }
 //}
 
-void midpointarray(std::vector<double>& v_rarray, double start, double end, double step, double galmass, double blackmass)
+void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass)
 {
   double s =0;
   double h = (end - start)/step;
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
   //steps, start, end?
   double pluma;
   double start;
-  double steps;
+  unsigned steps;
   double galmass;
   double blackmass;
   
@@ -108,23 +108,23 @@ int main(int argc, char** argv)
   using std::cin;
   
   //input values
-  cout >> "Jean's equation simulation. \n Please input core radius (double).";
-  cin >> end;
+  cout << "Jean's equation simulation. \n Please input core radius (double)." << std::endl;
+  cin >> pluma;
   
-  cout >> "Please input start radius.";
+  cout << "Please input start radius." << std::endl;
   cin >> start;
   
-  cout >> "Please input no. steps";
+  cout << "Please input no. steps" << std::endl;
   cin >> steps;
 
-  cout >> "Please input Mass of Galaxy";
+  cout << "Please input Mass of Galaxy" << std::endl;
   cin >> galmass;
   
-  cout >> "Please input additional black hole mass (0 for none)";
+  cout << "Please input additional black hole mass (0 for none)" << std::endl;
   cin >> blackmass;
   
   std::string filename;  
-  cout >> "Please input output filename";
+  cout << "Please input output filename" << std::endl;
   cin >> filename;
   
   //Check with holger about end of int being radius
