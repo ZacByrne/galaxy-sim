@@ -12,7 +12,7 @@ double pi = 3.1415926535;
 //GET VALUE FOR HOLGER
 
 //double galmass = 1:
-double Gconst = 6.674*pow(10,-11);
+double Gconst = 6.674*pow(10.0,-11.0);
 
 //rotational velocity
 double  rotvel(double r)
@@ -109,8 +109,9 @@ int main(int argc, char** argv)
   using std::cin;
   
   //input values
-  cout << "Jean's equation simulation. \n Please input core radius (double)." << std::endl;
+  cout << "Jean's equation simulation. \n Please input core radius (Kpc)." << std::endl;
   cin >> pluma;
+  pluma = pluma*3.086*pow(10.0,19.0)
   
   cout << "Please input start radius." << std::endl;
   cin >> start;
