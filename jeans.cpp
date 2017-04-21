@@ -49,16 +49,16 @@ double Mfuncplum(double r)
 }
 
 //derivative of gfravitational potential
-double dgravpotplum(double r, double galmass )
+double dgravpotplum(double r, double galmass, double pluma)
 {
   dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3/2);
   return dphi;
 }
 
 //function of r and yn for midpoint
-double fry(double r, double y_n, double galmass, double blackmass)
+double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 {
-  fvalue = -1*dgravpotplum(r,galmass) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum*y_n/vsteldelplum(r);
+  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r)*y_n/vsteldelplum(r);
   return fvalue;
 }
 
@@ -82,8 +82,8 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
       yn = s;
       v_rarry[i]=yn;
       rn = start + i*h;
-      s = s + h/2*fry(rn,yn, galmass, blackmass);
-      s = yn + h*fry(rn+h/2, s, galmass, blackmass));
+      s = s + h/2*fry(rn,yn, galmass, blackmass, end);
+      s = yn + h*fry(rn+h/2, s, galmass, blackmass, end));
       
       // changed to not recursive 
         //s = s + h/2*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
   
   //input values
   cout >> "Jean's equation simulation. \n Please input core radius (double).";
-  cin >> pluma;
+  cin >> end;
   
   cout >> "Please input start radius.";
   cin >> start;
@@ -117,8 +117,12 @@ int main(int argc, char** argv)
   cout >> "Please input additional black hole mass (0 for none)";
   cin >> blackmass;
   
+  string filename;  
+  cout >> "Please input output filename";
+  cin >> filename;
+  
   //Check with holger about end of int being radius
-  end = pluma;
+  //end = pluma;
   
   //vector array
   std::vector<double> vrarray(steps);
@@ -126,15 +130,16 @@ int main(int argc, char** argv)
   midpointarray(vrarray, start, end, steps, galmass, blackmass);
   
   ofstream myfile;
-  myfile.open ("output.txt");
+  myfile.open (filename);
+  double h = (end-start)/steps;
+  double r = 9
   for (int i =0; i<steps; ++i)
   {
-    myfile << ;
-    myfile.close();
-    return 0;
+    r = start + i*h;
+    myfile << r << "   " << vrarray[i] << "\n";
   }
-  
-  
+  myfile.close();
+  return 0;
 
 }
 
