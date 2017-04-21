@@ -104,6 +104,9 @@ int main(int argc, char** argv)
   double galmass;
   double blackmass;
   
+  using std::cout;
+  using std::cin;
+  
   //input values
   cout >> "Jean's equation simulation. \n Please input core radius (double).";
   cin >> end;
@@ -120,7 +123,7 @@ int main(int argc, char** argv)
   cout >> "Please input additional black hole mass (0 for none)";
   cin >> blackmass;
   
-  string filename;  
+  std::string filename;  
   cout >> "Please input output filename";
   cin >> filename;
   
@@ -130,9 +133,9 @@ int main(int argc, char** argv)
   //vector array
   std::vector<double> vrarray(steps);
   
-  midpointarray(vrarray, start, end, steps, galmass, blackmass);
+  midpointarray(vrarray, start, pluma, steps, galmass, blackmass);
   
-  ofstream myfile;
+  std::ofstream myfile;
   myfile.open (filename);
   double h = (end-start)/steps;
   double r = 9
