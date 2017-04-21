@@ -6,7 +6,7 @@
 //#include <boost/lexical_cast.hpp>
 
 // NULL is gone, use nullptr
-double* me = nullptr;
+//double* me = nullptr;
 //double pluma = 1;
 double pi = 3.1415926535;
 //GET VALUE FOR HOLGER
@@ -30,19 +30,19 @@ double beta(double v_r2, double v_theta2)
 }
 
 //stellar density
-double vsteldelplum(double r)
+double vsteldelplum(double r, double galmass)
 {
   double rho = 3*galmass / (4*pi*pow(pluma,3)) * pow((1 + pow(pluma/r,2)),-5/2);
   return rho;
 }
 
-double dvstelplum(double r)
+double dvstelplum(double r, double galmass)
 {
-  double drho = -15/4 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(pluma/r,2)),-7/2)
+  double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(pluma/r,2)),-7.0/2.0)
 }
 
 //Mass Function
-double Mfuncplum(double r)
+double Mfuncplum(double r, double galmass)
 {
   double massr = galmass * (1 + pow(pluma/r,2));
   return massr;
@@ -51,14 +51,14 @@ double Mfuncplum(double r)
 //derivative of gfravitational potential
 double dgravpotplum(double r, double galmass, double pluma)
 {
-  dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3/2);
+  dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3.0/2.0);
   return dphi;
 }
 
 //function of r and yn for midpoint
 double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 {
-  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r)*y_n/vsteldelplum(r);
+  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r, galmass)*y_n/vsteldelplum(r, galmass);
   return fvalue;
 }
 
