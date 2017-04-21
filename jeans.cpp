@@ -137,9 +137,9 @@ int main(int argc, char** argv)
   
   std::ofstream myfile;
   myfile.open (filename);
-  double h = (end-start)/steps;
-  double r = 9
-  for (int i =0; i<steps; ++i)
+  double h = (pluma-start)/steps;
+  double r = 9;
+  for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
     myfile << r << "   " << vrarray[i] << "\n";
