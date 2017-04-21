@@ -30,19 +30,19 @@ double beta(double v_r2, double v_theta2)
 }
 
 //stellar density
-double vsteldelplum(double r, double galmass)
+double vsteldelplum(double r, double galmass, double pluma)
 {
   double rho = 3*galmass / (4*pi*pow(pluma,3)) * pow((1 + pow(pluma/r,2)),-5/2);
   return rho;
 }
 
-double dvstelplum(double r, double galmass)
+double dvstelplum(double r, double galmass, double pluma)
 {
   double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(pluma/r,2)),-7.0/2.0)
 }
 
 //Mass Function
-double Mfuncplum(double r, double galmass)
+double Mfuncplum(double r, double galmass, double pluma)
 {
   double massr = galmass * (1 + pow(pluma/r,2));
   return massr;
@@ -58,7 +58,7 @@ double dgravpotplum(double r, double galmass, double pluma)
 //function of r and yn for midpoint
 double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 {
-  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r, galmass)*y_n/vsteldelplum(r, galmass);
+  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r, galmass, end)*y_n/vsteldelplum(r, galmass, end);
   return fvalue;
 }
 
