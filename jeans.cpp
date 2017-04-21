@@ -51,14 +51,14 @@ double Mfuncplum(double r, double galmass, double pluma)
 //derivative of gfravitational potential
 double dgravpotplum(double r, double galmass, double pluma)
 {
-  dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3.0/2.0);
+  double dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3.0/2.0);
   return dphi;
 }
 
 //function of r and yn for midpoint
 double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 {
-  fvalue = -1*dgravpotplum(r,galmass, end) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvelstelplum(r, galmass, end)*y_n/vsteldelplum(r, galmass, end);
+  double fvalue = -1*dgravpotplum(r,galmass, pluma) - Gconst*blackmass/r - 2*beta(y_n,rotvel(r))* y_n / r - dvstelplum(r, galmass, pluma)*y_n/vsteldelplum(r, galmass, pluma);
   return fvalue;
 }
 
@@ -84,7 +84,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, doub
       v_rarray[i]=yn;
       rn = start + i*h;
       s = s + h/2*fry(rn,yn, galmass, blackmass, end);
-      s = yn + h*fry(rn+h/2, s, galmass, blackmass, end));
+      s = yn + h*fry(rn+h/2, s, galmass, blackmass, end);
       
       // changed to not recursive 
         //s = s + h/2*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
