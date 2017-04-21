@@ -74,13 +74,14 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 
 void midpointarray(std::vector<double>& v_rarray, double start, double end, double step, double galmass, double blackmass)
 {
-  float s =0;
-  float h = (end - start)/step;
-  float yn = s;
+  double s =0;
+  double h = (end - start)/step;
+  double yn = s;
+  double rn = 0;
   for (int i =0; i<step; ++i)
    {
       yn = s;
-      v_rarry[i]=yn;
+      v_rarray[i]=yn;
       rn = start + i*h;
       s = s + h/2*fry(rn,yn, galmass, blackmass, end);
       s = yn + h*fry(rn+h/2, s, galmass, blackmass, end));
