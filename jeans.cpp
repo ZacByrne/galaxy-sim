@@ -39,6 +39,7 @@ double vsteldelplum(double r, double galmass, double pluma)
 double dvstelplum(double r, double galmass, double pluma)
 {
   double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(pluma/r,2)),-7.0/2.0);
+  return drho;
 }
 
 //Mass Function
@@ -78,7 +79,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
   double h = (end - start)/step;
   double yn = s;
   double rn = 0;
-  for (int i =0; i<step; ++i)
+  for (unsigned i =0; i<step; ++i)
    {
       yn = s;
       v_rarray[i]=yn;
@@ -136,7 +137,7 @@ int main(int argc, char** argv)
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass);
   
   std::ofstream myfile;
-  myfile.open (filename);
+  myfile.open (filename.c_str());
   double h = (pluma-start)/steps;
   double r = 9;
   for (unsigned i =0; i<steps; ++i)
