@@ -146,10 +146,12 @@ int main(int argc, char** argv)
   myfile.open (filename.c_str());
   double h = (pluma-start)/steps;
   double r = 9;
+  double sigma2 = 0;
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
-    myfile << r << "   " << vrarray[i] << "\n";
+    sigma2 = gconst*galmass / (6*pluma) * pow((1 + pow(pluma/r,2)),-1.0/2.0);
+    myfile << r << "   " << vrarray[i] << "   "<< sigma2  << "\n";
   }
   myfile.close();
   return 0;
