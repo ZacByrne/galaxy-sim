@@ -32,27 +32,27 @@ double beta(double v_r2, double v_theta2)
 //stellar density
 double vsteldelplum(double r, double galmass, double pluma)
 {
-  double rho = 3*galmass / (4*pi*pow(pluma,3)) * pow((1 + pow(r/pluma,2)),-5/2);
+  double rho = 3*galmass / (4*pi*pow(pluma,3.0)) * pow((1 + pow(r/pluma,2)),-5.0/2.0);
   return rho;
 }
 
 double dvstelplum(double r, double galmass, double pluma)
 {
-  double drho = -15.0/4.0 * galmass*r/(pi*pow(pluma,5)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
+  double drho = -15.0/4.0 * galmass*r/(pi*pow(pluma,5.0)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
   return drho;
 }
 
 //Mass Function
 double Mfuncplum(double r, double galmass, double pluma)
 {
-  double massr = galmass * (1 + pow(pluma/r,2));
+  double massr = galmass * (1 + pow(pluma/r,2.0));
   return massr;
 }
 
 //derivative of gfravitational potential
 double dgravpotplum(double r, double galmass, double pluma)
 {
-  double dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(r/pluma,2)),-3.0/2.0);
+  double dphi = Gconst * galmass * r * pow(pluma, -3.0) * pow((1 + pow(r/pluma,2)),-3.0/2.0);
   return dphi;
 }
 
@@ -124,11 +124,11 @@ int main(int argc, char** argv)
 
   cout << "Please input Mass of Galaxy (solar masses)" << std::endl;
   cin >> galmass;
-  galmass = galmass * 1.989 * pow(10,30.0);
+  galmass = galmass * 1.989 * pow(10.0,30.0);
     
   cout << "Please input additional black hole mass (0 for none)(solar masses)" << std::endl;
   cin >> blackmass;
-  blackmass = blackmass* 1.989 * pow(10,30.0);
+  blackmass = blackmass* 1.989 * pow(10.0,30.0);
   
   std::string filename;  
   cout << "Please input output filename" << std::endl;
