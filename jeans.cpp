@@ -38,7 +38,7 @@ double vsteldelplum(double r, double galmass, double pluma)
 
 double dvstelplum(double r, double galmass, double pluma)
 {
-  double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
+  double drho = -15.0/4.0 * galmass*r/(pi*pow(pluma,5)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
   return drho;
 }
 
