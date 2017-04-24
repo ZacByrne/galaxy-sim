@@ -76,7 +76,7 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass)
 {
   double s =0;
-  double h = (end - start)/step;
+  double h = (innerr - start)/step;
   double yn = s;
   double rn = 0;
   for (unsigned i =0; i<step; ++i)
@@ -104,6 +104,7 @@ int main(int argc, char** argv)
   unsigned steps;
   double galmass;
   double blackmass;
+  double innerr;
   
   using std::cout;
   using std::cin;
@@ -113,7 +114,11 @@ int main(int argc, char** argv)
   cin >> pluma;
   pluma = pluma*3.086*pow(10.0,19.0);
   //convert to metres
-    
+  
+  cout << "Please input end radius. (Kpc)" << std::endl;
+  cin >> innerr;
+  innerr = innerr*3.086*pow(10.0,19.0);
+  
   cout << "Please input start radius. (Kpc)" << std::endl;
   cin >> start;
   start = start*3.086*pow(10.0,19.0);
@@ -140,11 +145,11 @@ int main(int argc, char** argv)
   //vector array
   std::vector<double> vrarray(steps);
   
-  midpointarray(vrarray, start, pluma, steps, galmass, blackmass);
+  midpointarray(vrarray, start, pluma, steps, galmass, blackmass,end);
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
-  double h = (pluma-start)/steps;
+  double h = (innerr-start)/steps;
   double r = 9;
   double sigma2 = 0;
   for (unsigned i =0; i<steps; ++i)
