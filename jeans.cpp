@@ -32,13 +32,13 @@ double beta(double v_r2, double v_theta2)
 //stellar density
 double vsteldelplum(double r, double galmass, double pluma)
 {
-  double rho = 3*galmass / (4*pi*pow(pluma,3)) * pow((1 + pow(pluma/r,2)),-5/2);
+  double rho = 3*galmass / (4*pi*pow(pluma,3)) * pow((1 + pow(r/pluma,2)),-5/2);
   return rho;
 }
 
 double dvstelplum(double r, double galmass, double pluma)
 {
-  double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(pluma/r,2)),-7.0/2.0);
+  double drho = -15.0/4.0 * galmass/(pi*pow(pluma,5)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
   return drho;
 }
 
@@ -52,7 +52,7 @@ double Mfuncplum(double r, double galmass, double pluma)
 //derivative of gfravitational potential
 double dgravpotplum(double r, double galmass, double pluma)
 {
-  double dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(pluma/r,2)),-3.0/2.0);
+  double dphi = Gconst * galmass * r * pow(pluma, -3) * pow((1 + pow(r/pluma,2)),-3.0/2.0);
   return dphi;
 }
 
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
-    sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(pluma/r,2)),-1.0/2.0);
+    sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
     myfile << r << "   " << vrarray[i] << "   "<< sigma2  << "\n";
   }
   myfile.close();
