@@ -111,19 +111,23 @@ int main(int argc, char** argv)
   //input values
   cout << "Jean's equation simulation. \n Please input core radius (Kpc)." << std::endl;
   cin >> pluma;
-  pluma = pluma*3.086*pow(10.0,19.0)
-  
-  cout << "Please input start radius." << std::endl;
+  pluma = pluma*3.086*pow(10.0,19.0);
+  //convert to metres
+    
+  cout << "Please input start radius. (Kpc)" << std::endl;
   cin >> start;
+  start = start*3.086*pow(10.0,19.0);
+  //convert to metres
   
   cout << "Please input no. steps" << std::endl;
   cin >> steps;
 
-  cout << "Please input Mass of Galaxy" << std::endl;
+  cout << "Please input Mass of Galaxy (solar masses)" << std::endl;
   cin >> galmass;
-  
-  cout << "Please input additional black hole mass (0 for none)" << std::endl;
-  cin >> blackmass;
+  galmass = galmass * 1.989 * pow(10,30.0);
+    
+  cout << "Please input additional black hole mass (0 for none)(solar masses)" << std::endl;
+  cin >> blackmass * 1.989 * pow(10,30.0);
   
   std::string filename;  
   cout << "Please input output filename" << std::endl;
