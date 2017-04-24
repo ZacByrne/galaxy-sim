@@ -127,7 +127,8 @@ int main(int argc, char** argv)
   galmass = galmass * 1.989 * pow(10,30.0);
     
   cout << "Please input additional black hole mass (0 for none)(solar masses)" << std::endl;
-  cin >> blackmass * 1.989 * pow(10,30.0);
+  cin >> blackmass;
+  blackmass = blackmass* 1.989 * pow(10,30.0);
   
   std::string filename;  
   cout << "Please input output filename" << std::endl;
