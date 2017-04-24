@@ -73,7 +73,7 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 //  }
 //}
 
-void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass)
+void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass, double innerr)
 {
   double s =0;
   double h = (innerr - start)/step;
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
   //vector array
   std::vector<double> vrarray(steps);
   
-  midpointarray(vrarray, start, pluma, steps, galmass, blackmass,end);
+  midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr);
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
