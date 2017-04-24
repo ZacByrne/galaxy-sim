@@ -150,7 +150,7 @@ int main(int argc, char** argv)
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
-    sigma2 = gconst*galmass / (6*pluma) * pow((1 + pow(pluma/r,2)),-1.0/2.0);
+    sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(pluma/r,2)),-1.0/2.0);
     myfile << r << "   " << vrarray[i] << "   "<< sigma2  << "\n";
   }
   myfile.close();
