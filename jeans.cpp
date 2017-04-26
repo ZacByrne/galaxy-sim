@@ -105,7 +105,7 @@ int main(int argc, char** argv)
   double galmass;
   double blackmass;
   double innerr;
-  double beta
+  double beta;
   
   using std::cout;
   using std::cin;
