@@ -93,7 +93,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
    }
 }
 
-double radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
+voide radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
 {
   double h = (end - start) / step;
   for (unsigned i =0; i<step; ++i)
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
   cin >> pluma;
   pluma = pluma*3.086*pow(10.0,19.0);
   //convert to metres
-  
+  OA
   cout << "Please input end radius. (Kpc)" << std::endl;
   cin >> innerr;
   innerr = innerr*3.086*pow(10.0,19.0);
