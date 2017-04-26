@@ -93,6 +93,31 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
    }
 }
 
+double radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
+{
+  double h = (end - start) / step;
+  for (unsigned i =0; i<step; ++i)
+  {
+    radarray[i] = start + i*h;
+  }
+}
+
+
+double projection(std::vector<double> v_rarray,std::vector<double> radrray, double start, double end, unsigned step, double galrad,double galmass, double pluma)
+{
+  double twodvc = 0;
+  start = start - 2000;
+  double h = (end - start)/step;
+  for (unsigned i = 0; i < step; ++i)
+  {
+    z = start +i*h;
+    hypot = pow((pow(galrad,2.0)+pow(z,2.0)), 0.5);
+    
+    
+    
+    
+  }
+}
 
 
 int main(int argc, char** argv)
@@ -149,8 +174,10 @@ int main(int argc, char** argv)
   
   //vector array
   std::vector<double> vrarray(steps);
+  std::vector<double> radarray(steps);
   
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
+  radiusarray(rarray, start, innerr, steps);
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
@@ -161,6 +188,7 @@ int main(int argc, char** argv)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
+    
     myfile << r << "   " << vrarray[i] << "   "<< sigma2  << "\n";
   }
   myfile.close();
