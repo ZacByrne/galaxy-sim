@@ -57,7 +57,7 @@ double dgravpotplum(double r, double galmass, double pluma)
 }
 
 //function of r and yn for midpoint
-double fry(double r, double y_n, double galmass, double blackmass, double pluma, beta)
+double fry(double r, double y_n, double galmass, double blackmass, double pluma, double beta)
 {
   double fvalue = -1*dgravpotplum(r,galmass, pluma) - Gconst*blackmass/pow(r,2.0) - 2*beta* y_n / r - dvstelplum(r, galmass, pluma)*y_n/vsteldelplum(r, galmass, pluma);
   return fvalue;
