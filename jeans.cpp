@@ -22,12 +22,12 @@ double  rotvel(double r)
 }
 
 //beta
-double beta(double v_r2, double v_theta2)
-{
-  double betavalue = 0;
-    //1 - (v_theta2)/(v_r2);
-  return betavalue;
-}
+//double beta(double v_r2, double v_theta2)
+//{
+ // double betavalue = 0;
+  //  //1 - (v_theta2)/(v_r2);
+//  return betavalue;
+//}
 
 //stellar density
 double vsteldelplum(double r, double galmass, double pluma)
@@ -57,9 +57,9 @@ double dgravpotplum(double r, double galmass, double pluma)
 }
 
 //function of r and yn for midpoint
-double fry(double r, double y_n, double galmass, double blackmass, double pluma)
+double fry(double r, double y_n, double galmass, double blackmass, double pluma, beta)
 {
-  double fvalue = -1*dgravpotplum(r,galmass, pluma) - Gconst*blackmass/pow(r,2.0) - 2*beta(y_n,rotvel(r))* y_n / r - dvstelplum(r, galmass, pluma)*y_n/vsteldelplum(r, galmass, pluma);
+  double fvalue = -1*dgravpotplum(r,galmass, pluma) - Gconst*blackmass/pow(r,2.0) - 2*beta* y_n / r - dvstelplum(r, galmass, pluma)*y_n/vsteldelplum(r, galmass, pluma);
   return fvalue;
 }
 
@@ -73,7 +73,7 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma)
 //  }
 //}
 
-void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass, double innerr)
+void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass, double innerr, double beta)
 {
   double s =0;
   double h = (innerr - start)/step;
@@ -84,8 +84,8 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
       yn = s;
       v_rarray[i]=yn;
       rn = start + i*h;
-      s = s + h/2*fry(rn,yn, galmass, blackmass, end);
-      s = yn + h*fry(rn+h/2, s, galmass, blackmass, end);
+      s = s + h/2*fry(rn,yn, galmass, blackmass, end, beta);
+      s = yn + h*fry(rn+h/2, s, galmass, blackmass, end, beta);
       
       // changed to not recursive 
         //s = s + h/2*fry((rn+h/2), (yn + h/2*fry(rn,yn)));
@@ -105,6 +105,7 @@ int main(int argc, char** argv)
   double galmass;
   double blackmass;
   double innerr;
+  double beta
   
   using std::cout;
   using std::cin;
@@ -135,6 +136,10 @@ int main(int argc, char** argv)
   cin >> blackmass;
   blackmass = blackmass* 1.989 * pow(10.0,30.0);
   
+  cout << "Please input Beta (anisotropy value)" << std::endl;
+  cin >> beta;
+    
+  
   std::string filename;  
   cout << "Please input output filename" << std::endl;
   cin >> filename;
@@ -145,7 +150,7 @@ int main(int argc, char** argv)
   //vector array
   std::vector<double> vrarray(steps);
   
-  midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr);
+  midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
