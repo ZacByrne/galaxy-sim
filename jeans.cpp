@@ -111,10 +111,12 @@ void radiusarray(std::vector<double>& radarray,double start, double end, unsigne
 
 double projection(std::vector<double> v_rarray,std::vector<double> radarray,std::vector<double> vrdarray, double start, double end, unsigned step, double galrad,double galmass, double pluma)
 {
-  double twodvc = 0;
+  double intertop = 0;
+  double interbot = 0;
   start = start - 2000;
   double hypt = 0;
-  double vstel = 0
+  double vstel = 0;
+  double z = 0;
   double h = (end - start)/step;
   for (unsigned i = 0; i < step; ++i)
   {
@@ -128,7 +130,7 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
     intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
     interbot += vstel;
   }
-  project = intertop/interbot;
+  double project = intertop/interbot;
   return project;
 
     
@@ -195,7 +197,7 @@ int main(int argc, char** argv)
 
   
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
-  radiusarray(rarray, start, innerr, steps);
+  radiusarray(radarray, start, innerr, steps);
 
   for (unsigned i =0; i<steps; ++i)
   {
@@ -206,22 +208,22 @@ int main(int argc, char** argv)
   std::vector<double> vrdarray(steps);
   spline(radarray, vsortarray, (vsortarray.size()), dyn1, dyn2,vrdarray);
 
-  std::vector<double> projectarray(steps)
+  std::vector<double> projectarray(steps);
   double h = (innerr-start)/steps;
   double r = 0;
   for (unsigned i = 0; i < steps; ++i)
   {
     r = start + i*h;
-    projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r, pluma);
+    projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r,galmass, pluma);
   }
 
 
   std::ofstream myfile;
   myfile.open (filename.c_str());
-  double h = (innerr-start)/steps;
-  double r = 0;
+  h = (innerr-start)/steps;
+  r = 0;
   double sigma2 = 0;
-  double sigma3 = 0
+  double sigma3 = 0;
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
