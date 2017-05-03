@@ -126,7 +126,7 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
       {
 	break;
       }
-    splint(radarray, v_rarray, vrdarray, (start+2000), hypt, vstel);
+    splint(radarray.data(), v_rarray.data(), vrdarray.data(), (start+2000), hypt, vstel);
     intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
     interbot += vstel;
   }
@@ -206,7 +206,7 @@ int main(int argc, char** argv)
   double dyn1 = 0;
   double dyn2 = 0;
   std::vector<double> vrdarray(steps);
-  spline(radarray, vsortarray, (vsortarray.size()), dyn1, dyn2,vrdarray);
+  spline(radarray.data(), vsortarray.data(), (vsortarray.size()), dyn1, dyn2,vrdarray.data());
 
   std::vector<double> projectarray(steps);
   double h = (innerr-start)/steps;
