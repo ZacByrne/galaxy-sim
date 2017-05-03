@@ -5,6 +5,12 @@
 //#include <cassert>
 //#include <boost/lexical_cast.hpp>
 
+#include <stdio.h>
+#include <math.h>
+#define NRANSI
+#include "nr.h"
+#include "nrutil.h"
+
 // NULL is gone, use nullptr
 //double* me = nullptr;
 //double pluma = 1;
@@ -93,30 +99,40 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
    }
 }
 
-voide radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
+void radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
 {
-  double h = (end - start) / step;
+  double h = (start - end) / step;
   for (unsigned i =0; i<step; ++i)
   {
-    radarray[i] = start + i*h;
+    radarray[i] = end + i*h;
   }
 }
 
 
-double projection(std::vector<double> v_rarray,std::vector<double> radrray, double start, double end, unsigned step, double galrad,double galmass, double pluma)
+double projection(std::vector<double> v_rarray,std::vector<double> radarray,std::vector<double> vrdarray, double start, double end, unsigned step, double galrad,double galmass, double pluma)
 {
   double twodvc = 0;
   start = start - 2000;
+  double hypt = 0;
+  double vstel = 0
   double h = (end - start)/step;
   for (unsigned i = 0; i < step; ++i)
   {
-    z = start +i*h;
-    hypot = pow((pow(galrad,2.0)+pow(z,2.0)), 0.5);
-    
-    
-    
-    
+    z = start + i*h;
+    hypt = pow((pow(galrad,2.0)+pow(z,2.0)), 0.5);
+    if (hypt > start)
+      {
+	break;
+      }
+    splint(radarray, v_rarray, vrdarray, (start+2000), hypt, vstel);
+    intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
+    interbot += vstel;
   }
+  project = intertop/interbot;
+  return project;
+
+    
+    
 }
 
 
@@ -140,7 +156,7 @@ int main(int argc, char** argv)
   cin >> pluma;
   pluma = pluma*3.086*pow(10.0,19.0);
   //convert to metres
-  OA
+  
   cout << "Please input end radius. (Kpc)" << std::endl;
   cin >> innerr;
   innerr = innerr*3.086*pow(10.0,19.0);
@@ -175,25 +191,48 @@ int main(int argc, char** argv)
   //vector array
   std::vector<double> vrarray(steps);
   std::vector<double> radarray(steps);
+  std::vector<double> vsortarray(steps);
+
   
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
   radiusarray(rarray, start, innerr, steps);
-  
+
+  for (unsigned i =0; i<steps; ++i)
+  {
+    vsortarray[i] = vrarray[(vrarray.size()-i)];
+  }
+  double dyn1 = 0;
+  double dyn2 = 0;
+  std::vector<double> vrdarray(steps);
+  spline(radarray, vsortarray, (vsortarray.size()), dyn1, dyn2,vrdarray);
+
+  std::vector<double> projectarray(steps)
+  double h = (innerr-start)/steps;
+  double r = 0;
+  for (unsigned i = 0; i < steps; ++i)
+  {
+    r = start + i*h;
+    projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r, pluma);
+  }
+
+
   std::ofstream myfile;
   myfile.open (filename.c_str());
   double h = (innerr-start)/steps;
-  double r = 9;
+  double r = 0;
   double sigma2 = 0;
+  double sigma3 = 0
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
-    
-    myfile << r << "   " << vrarray[i] << "   "<< sigma2  << "\n";
+    sigma3 = pi*sigma2/128;
+    myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[i] << "   " << sigma3 << "\n";
   }
   myfile.close();
   return 0;
 
 }
+
 
 
