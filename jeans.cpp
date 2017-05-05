@@ -5,11 +5,11 @@
 //#include <cassert>
 //#include <boost/lexical_cast.hpp>
 
-#include <stdio.h>
-#include <math.h>
-#define NRANSI
-#include "nr.h"
-#include "nrutil.h"
+//#include <stdio.h>
+//#include <math.h>
+//#define NRANSI
+//#include "nr.h"
+//#include "nrutil.h"
 
 // NULL is gone, use nullptr
 //double* me = nullptr;
@@ -177,7 +177,7 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
       {
 	break;
       }
-    splint(radarray.data(), v_rarray.data(), vrdarray.data(), (start+2000), hypt, vstel);
+    vstel = splint(radarray.data(), v_rarray.data(), vrdarray.data(), (start+2000), hypt);
     intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
     interbot += vstel;
   }
