@@ -61,16 +61,17 @@ double splint(double xa[], double ya[], double y2a[], int n, double x)
 {
         int klo,khi,k;
         double h,b,a;
-
+	std::cout << "test";
         klo=0;
         khi=n;
         while (khi-klo > 1) {
-                k=(khi+klo) >> 1;
-                if (xa[k] > x) khi=k;
-                else klo=k;
-        }
+	  std::cout << "test";
+	  k=(khi+klo) >> 1;
+	  if (xa[k] > x) khi=k;
+	  else klo=k;
+	}
         h=xa[khi]-xa[klo];
-        if (h == 0.0) std::cout("Bad xa input to routine splint\n");
+        if (h == 0.0) std::cout<<"Bad xa input to routine splint\n";
 
         a=(xa[khi]-x)/h;
         b=(x-xa[klo])/h;
@@ -156,6 +157,7 @@ void radiusarray(std::vector<double>& radarray,double start, double end, unsigne
   for (unsigned i =0; i<step; ++i)
   {
     radarray[i] = end + i*h;
+    
   }
 }
 
@@ -164,22 +166,31 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
 {
   double intertop = 0;
   double interbot = 0;
-  start = start - 2000;
+  start = start - 20000;
   double hypt = 0;
   double vstel = 0;
   double z = 0;
   double h = (end - start)/step;
-  for (unsigned i = 0; i < step; ++i)
+  //std::cout << end << "  start " << start << std::endl;
+  //std::cout << h << " step =  " << step << std::endl;
+  for (unsigned i = 0; i<step; ++i)
   {
-    z = start + i*h;
+    z = end + i*h;
+    // std::cout << h <<" i " <<i <<" ih " << (i*h) << std::endl;
+    //std::cout <<i << std::endl;
     hypt = pow((pow(galrad,2.0)+pow(z,2.0)), 0.5);
-    if (hypt > start)
-      {
-	break;
-      }
+    std::cout << "test" << std::endl;
+    std::cout << hypt << "   " << start << std::endl;
+    std::cout << "test";
+    //if (hypt > (start+200000))
+    //{
+    //break;
+    // }
+    std::cout << "test";
     vstel = splint(radarray.data(), v_rarray.data(), vrdarray.data(), (start+2000), hypt);
     intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
     interbot += vstel;
+    //std::cout << vstel << std::endl;
   }
   double project = intertop/interbot;
   return project;
@@ -249,7 +260,7 @@ int main(int argc, char** argv)
   
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
   radiusarray(radarray, start, innerr, steps);
-
+  //cout << radarray[4];
   for (unsigned i =0; i<steps; ++i)
   {
     vsortarray[i] = vrarray[(vrarray.size()-i)];
@@ -258,14 +269,17 @@ int main(int argc, char** argv)
   double dyn2 = 0;
   std::vector<double> vrdarray(steps);
   spline(radarray.data(), vsortarray.data(), (vsortarray.size()), dyn1, dyn2,vrdarray.data());
+  // cout << vrdarray[2];
 
   std::vector<double> projectarray(steps);
-  double h = (innerr-start)/steps;
+  double h = (start-innerr)/steps;
   double r = 0;
   for (unsigned i = 0; i < steps; ++i)
   {
-    r = start + i*h;
+    r = innerr + i*h;
+    //    cout << r << std::endl; 
     projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r,galmass, pluma);
+    //cout << projectarray[i] << std::endl;
   }
 
 
