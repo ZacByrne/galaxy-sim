@@ -280,7 +280,7 @@ int main(int argc, char** argv)
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
     sigma3 = pi*sigma2/128;
-    myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[i] << "   " << sigma3 << "\n";
+    myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
   }
   myfile.close();
   return 0;
