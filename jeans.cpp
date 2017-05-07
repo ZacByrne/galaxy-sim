@@ -59,23 +59,25 @@ void spline(double x[], double y[], int n, double yp1, double ypn, double y2[])
 
 double splint(double xa[], double ya[], double y2a[], int n, double x)
 {
-        int klo,khi,k;
-        double h,b,a;
-	std::cout << "test";
-        klo=0;
-        khi=n;
-        while (khi-klo > 1) {
-	  std::cout << "test";
-	  k=(khi+klo) >> 1;
-	  if (xa[k] > x) khi=k;
-	  else klo=k;
-	}
-        h=xa[khi]-xa[klo];
-        if (h == 0.0) std::cout<<"Bad xa input to routine splint\n";
+  int klo,khi,k;
+  double h,b,a;
+  //std::cout << "test splint n  = "<< n <<std::endl;
+  klo=0;
+  khi=n;
+  while (khi-klo > 1) {
+    //std::cout << "khi = " << khi << std::endl;
+    k=(khi+klo) >> 1;
+    //std::cout << "k >> 1 = " << k << std::endl;
+    if (xa[k] > x) khi=k;
+    else klo=k;
+  }
+  //std::cout << khi << "   klo " << klo << std::endl;
+  h=xa[khi]-xa[klo];
+  if (h == 0.0) std::cout<<"Bad xa input to routine splint\n";
 
-        a=(xa[khi]-x)/h;
-        b=(x-xa[klo])/h;
-        return a*ya[klo]+b*ya[khi]+((a*a*a-a)*y2a[klo]+(b*b*b-b)*y2a[khi])*(h*h)/6.0;
+  a=(xa[khi]-x)/h;
+  b=(x-xa[klo])/h;
+  return a*ya[klo]+b*ya[khi]+((a*a*a-a)*y2a[klo]+(b*b*b-b)*y2a[khi])*(h*h)/6.0;
 }
 
 
@@ -166,31 +168,33 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
 {
   double intertop = 0;
   double interbot = 0;
-  start = start - 20000;
+  start = start - 20000.0;
   double hypt = 0;
   double vstel = 0;
+  double popden = 0;
   double z = 0;
-  double h = (end - start)/step;
+  double h = (start - end)/step;
   //std::cout << end << "  start " << start << std::endl;
   //std::cout << h << " step =  " << step << std::endl;
   for (unsigned i = 0; i<step; ++i)
   {
     z = end + i*h;
-    // std::cout << h <<" i " <<i <<" ih " << (i*h) << std::endl;
+    //std::cout<<" h = " << h <<" i =  " <<i <<" start " << start << std::endl;
     //std::cout <<i << std::endl;
     hypt = pow((pow(galrad,2.0)+pow(z,2.0)), 0.5);
-    std::cout << "test" << std::endl;
-    std::cout << hypt << "   " << start << std::endl;
-    std::cout << "test";
+    //std::cout << "test" << std::endl;
+    //    std::cout << hypt << "   " << start << std::endl;
+    //std::cout << "test";
     //if (hypt > (start+200000))
     //{
     //break;
     // }
-    std::cout << "test";
-    vstel = splint(radarray.data(), v_rarray.data(), vrdarray.data(), (start+2000), hypt);
-    intertop += (vstel * vsteldelplum(hypt, galmass, pluma));
-    interbot += vstel;
-    //std::cout << vstel << std::endl;
+    //std::cout << " z = " << z << "  start = " << (start+2000.0) << std::endl;
+    vstel = splint(radarray.data(), v_rarray.data(), vrdarray.data(), radarray.size(), hypt);
+    popden = vsteldelplum(hypt, galmass, pluma);
+    intertop += (vstel * popden);
+    interbot += popden;
+    //std::cout<< "vstel  = " << vstel <<"  intertop  = "<< intertop   <<std::endl;
   }
   double project = intertop/interbot;
   return project;
@@ -293,7 +297,8 @@ int main(int argc, char** argv)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
-    sigma3 = pi*sigma2/128;
+    sigma3 = pi*sigma2/4.0;
+    cout <<"vstel  = "<< vsteldelplum(r,galmass, pluma) << std::endl;
     myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
   }
   myfile.close();
