@@ -168,7 +168,7 @@ double projection(std::vector<double> v_rarray,std::vector<double> radarray,std:
 {
   double intertop = 0;
   double interbot = 0;
-  start = start - 20000.0;
+  //start = start - 20000.0;
   double hypt = 0;
   double vstel = 0;
   double popden = 0;
@@ -275,17 +275,20 @@ int main(int argc, char** argv)
   spline(radarray.data(), vsortarray.data(), (vsortarray.size()), dyn1, dyn2,vrdarray.data());
   // cout << vrdarray[2];
 
+  cout << "rad array done" <<std::endl;
+
   std::vector<double> projectarray(steps);
   double h = (start-innerr)/steps;
   double r = 0;
   for (unsigned i = 0; i < steps; ++i)
   {
     r = innerr + i*h;
-    //    cout << r << std::endl; 
+    cout << r << std::endl; 
     projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r,galmass, pluma);
     //cout << projectarray[i] << std::endl;
   }
 
+  cout << "Projetion done" << std::endl;
 
   std::ofstream myfile;
   myfile.open (filename.c_str());
@@ -293,15 +296,17 @@ int main(int argc, char** argv)
   r = 0;
   double sigma2 = 0;
   double sigma3 = 0;
+  cout << "inerrer = " << innerr <<"  start  = " << start << "  h  =  "<< h <<std::endl;
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
     sigma3 = pi*sigma2/4.0;
-    cout <<"vstel  = "<< vsteldelplum(r,galmass, pluma) << std::endl;
+    //    cout <<"vstel  = "<< vsteldelplum(r,galmass, pluma) << std::endl;
     myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
   }
   myfile.close();
+  cout << "r = " << r << std::endl;
   return 0;
 
 }
