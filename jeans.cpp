@@ -20,7 +20,7 @@ double pi = 3.1415926535;
 //double galmass = 1:
 double Gconst = 6.674*pow(10.0,-11.0);
 
-
+//function from Holger for cubic spline
 void spline(double x[], double y[], int n, double yp1, double ypn, double y2[])
 {
         int i,k;
@@ -56,7 +56,7 @@ void spline(double x[], double y[], int n, double yp1, double ypn, double y2[])
                 y2[k]=y2[k]*y2[k+1]+u[k-1];
 }
 
-
+//function from holger for splint (get value given x
 double splint(double xa[], double ya[], double y2a[], int n, double x)
 {
   int klo,khi,k;
@@ -89,20 +89,21 @@ double splint(double xa[], double ya[], double y2a[], int n, double x)
 //  return betavalue;
 //}
 
-//stellar density
+//stellar density at r in plummer model
 double vsteldelplum(double r, double galmass, double pluma)
 {
   double rho = 3*galmass / (4*pi*pow(pluma,3.0)) * pow((1 + pow(r/pluma,2)),-5.0/2.0);
   return rho;
 }
 
+//first deriviative of stellar density at r
 double dvstelplum(double r, double galmass, double pluma)
 {
   double drho = -15.0/4.0 * galmass*r/(pi*pow(pluma,5.0)) * pow((1 + pow(r/pluma,2)),-7.0/2.0);
   return drho;
 }
 
-//Mass Function
+//Mass Function at r of plummer model
 double Mfuncplum(double r, double galmass, double pluma)
 {
   double massr = galmass * (1 + pow(pluma/r,2.0));
@@ -116,7 +117,7 @@ double dgravpotplum(double r, double galmass, double pluma)
   return dphi;
 }
 
-//function of r and yn for midpoint
+//function of r and yn for midpoint formula, calculates velocity dispersion first deriviatiuve
 double fry(double r, double y_n, double galmass, double blackmass, double pluma, double beta)
 {
   double fvalue = -1*dgravpotplum(r,galmass, pluma) - Gconst*blackmass/pow(r,2.0) - 2*beta* y_n / r - dvstelplum(r, galmass, pluma)*y_n/vsteldelplum(r, galmass, pluma);
@@ -133,6 +134,8 @@ double fry(double r, double y_n, double galmass, double blackmass, double pluma,
 //  }
 //}
 
+
+//midpoint ODE integration function with 
 void midpointarray(std::vector<double>& v_rarray, double start, double end, unsigned step, double galmass, double blackmass, double innerr, double beta)
 {
   double s =0;
@@ -153,6 +156,7 @@ void midpointarray(std::vector<double>& v_rarray, double start, double end, unsi
    }
 }
 
+// make array of radius values for splint and spline
 void radiusarray(std::vector<double>& radarray,double start, double end, unsigned step)
 {
   double h = (start - end) / step;
@@ -163,7 +167,7 @@ void radiusarray(std::vector<double>& radarray,double start, double end, unsigne
   }
 }
 
-
+// get projection of 3d along a given line of sight. GIven r, integrate over z
 double projection(std::vector<double> v_rarray,std::vector<double> radarray,std::vector<double> vrdarray, double start, double end, unsigned step, double galrad,double galmass, double pluma)
 {
   double intertop = 0;
@@ -261,29 +265,38 @@ int main(int argc, char** argv)
   std::vector<double> radarray(steps);
   std::vector<double> vsortarray(steps);
 
-  
+  // Run midpoint ODE formula
   midpointarray(vrarray, start, pluma, steps, galmass, blackmass,innerr,beta);
+  
+  // Create sorted radius array for spline and splint
   radiusarray(radarray, start, innerr, steps);
   //cout << radarray[4];
+
+  //resort v array for splint and spline (SHOULD REWRITE MIDPOINT CODE>>>>
   for (unsigned i =0; i<steps; ++i)
   {
     vsortarray[i] = vrarray[(vrarray.size()-i)];
   }
+
+  //Spline function and deriviatives
   double dyn1 = 0;
   double dyn2 = 0;
   std::vector<double> vrdarray(steps);
+
   spline(radarray.data(), vsortarray.data(), (vsortarray.size()), dyn1, dyn2,vrdarray.data());
   // cout << vrdarray[2];
 
   cout << "rad array done" <<std::endl;
 
+
+  //Projection array
   std::vector<double> projectarray(steps);
   double h = (start-innerr)/steps;
   double r = 0;
   for (unsigned i = 0; i < steps; ++i)
   {
     r = innerr + i*h;
-    cout << r << std::endl; 
+    //cout << r << std::endl; 
     projectarray[i] = projection(vsortarray, radarray, vrdarray,start,innerr, steps, r,galmass, pluma);
     //cout << projectarray[i] << std::endl;
   }
@@ -296,17 +309,20 @@ int main(int argc, char** argv)
   r = 0;
   double sigma2 = 0;
   double sigma3 = 0;
-  cout << "inerrer = " << innerr <<"  start  = " << start << "  h  =  "<< h <<std::endl;
+  //cout << "inerrer = " << innerr <<"  start  = " << start << "  h  =  "<< h <<std::endl;
+  double testvd=0;
   for (unsigned i =0; i<steps; ++i)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
     sigma3 = pi*sigma2/4.0;
+    testvd = splint(radarray.data(), vsortarray.data(), vrdarray.data(), radarray.size(), r);
     //    cout <<"vstel  = "<< vsteldelplum(r,galmass, pluma) << std::endl;
-    myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
+    myfile << r << "   " << vrarray[i] << "   "<< testvd  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
   }
+  //have changed the sigma2 to testvd for tasting purposes in output
   myfile.close();
-  cout << "r = " << r << std::endl;
+  //  cout << "r = " << r << std::endl;
   return 0;
 
 }
