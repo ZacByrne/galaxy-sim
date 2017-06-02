@@ -6,9 +6,54 @@
 double pi = 3.1415926535;
 double Gconst = 6.674*pow(10.0,-11.0);
 
-void massr(std::vector<double>& density_array, 
+void makeradius(std::vector<double>& rad_array, double steps, double innerr, double outerr)
+{
+  double h = (outerr - innerr)/steps;
+  double radius = 0;
+  for (unsigned i =0; i<steps; ++i)
+  {
+    radius = outerr - i*h;
+    rad_rarray[i]= radius;
+  }
+}
 
 
+void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, double steps, double galmass, double pluma)
+{
+  double radius = 0;
+  for (unsigned i =0; i<steps; ++i)
+  {
+    radius = rad_array[i];
+    density_rarray[i]= 3*galmass / (4*pi*pow(pluma,3.0)) * pow((1 + pow(radius/pluma,2)),-5.0/2.0);
+  }
+}
+
+void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
+{
+  double radius = 0;
+  double massr= 0;
+  for (unsigned i =0; i<steps; ++i)
+  {
+    maxradius = rad_array[i];
+    massr = 0;
+    for (unsigned j =0; j<(steps-i); ++j)
+    {
+      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2);
+    }
+    massr = 4 * pi * massr;
+    mass_array[i] = massr;
+  }   
+}
+
+void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
+{
+  for (unsigned i =0; i<steps; ++i)
+  {
+    poten_array[i] = -1* Gconst * mass_array[i] / rad_array[i];
+  }
+  // Can remove -1 if relative potential?
+}
+  
 
 int main(int argc, char** argv)
 {
