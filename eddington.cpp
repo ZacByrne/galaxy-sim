@@ -47,7 +47,6 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
 
 void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps)
 {
-  double phin = -1* Gconst * mass_array[0] / rad_array[0];
   double potenr = 0;
   for (unsigned i =0; i<steps; ++i)
   {                                                                                                                                                                             
@@ -58,11 +57,20 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
 	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
       }
     potenr = Gconst * potenr;
-    poten_array[i] = potenr + phin;
+    //std::cout << "Potenr  = " << potenr  << "   phin = " << phin << std::endl; 
+    poten_array[i] = potenr;
     //poten_array[i] = 
     //poten_array[i] = Gconst * mass_array[i] /(rad_array[i]) + phin;
   }
+  
   // Can remove -1 if relative potential?
+  double phin = poten_array[0];
+  for (unsigned i =0; i<steps; ++i)
+  {
+    poten_array[i] = poten_array[i]-phin;
+  }
+
+
 }
  
 
