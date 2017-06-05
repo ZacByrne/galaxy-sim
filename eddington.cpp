@@ -13,7 +13,7 @@ void makeradius(std::vector<double>& rad_array, double steps, double innerr, dou
   for (unsigned i =0; i<steps; ++i)
   {
     radius = outerr - i*h;
-    rad_rarray[i]= radius;
+    rad_array[i]= radius;
   }
 }
 
@@ -24,7 +24,7 @@ void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, 
   for (unsigned i =0; i<steps; ++i)
   {
     radius = rad_array[i];
-    density_rarray[i]= 3*galmass / (4*pi*pow(pluma,3.0)) * pow((1 + pow(radius/pluma,2)),-5.0/2.0);
+    density_array[i]= 3*galmass / (4*pi*pow(pluma,3.0)) * pow((1 + pow(radius/pluma,2)),-5.0/2.0);
   }
 }
 
