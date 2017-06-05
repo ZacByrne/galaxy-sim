@@ -145,6 +145,18 @@ int main(int argc, char** argv)
   dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
   
-  
+  std::ofstream myfile;
+  myfile.open (filename.c_str());
+  double h = (outerr - innerr)/steps;
+  r = 0;
+  //cout << "inerrer = " << innerr <<"  start  = " << start << "  h  =  "<< h <<std::endl;
+  for (unsigned i =0; i<steps; ++i)
+  {
+    myfile << radius_array[i] << "   " << vrarray[i] << "   "<< testvd  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
+  }
+  //have changed the sigma2 to testvd for tasting purposes in output
+  myfile.close();
+  //  cout << "r = " << r << std::endl;
+  return 0;
 
 }
