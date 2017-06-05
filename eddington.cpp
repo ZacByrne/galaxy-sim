@@ -54,6 +54,28 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
   }
   // Can remove -1 if relative potential?
 }
+ 
+
+void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array, std::vector<double>& density_array, double steps)
+{
+  drho_array[0] = 0;
+  drho_array[steps] = 0;
+  for (unsigned i =1; i<(steps-1); ++i)
+  {
+    drho_array[i] = (density_array[(i+1)] -  density_array[(i-1)])/(poten_array[(i+1)] -  poten_array[(i-1)]);
+  }
+  
+}
+
+void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, double steps);
+{
+  dtworho_array[0] = 0;
+  dtworho_array[steps] = 0;
+  for (unsigned i =1; i<(steps-1); ++i)
+  {
+    dtworho_array[i] = (density_array[(i+1)] +  density_array[(i+1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
+  }      
+}
   
 
 int main(int argc, char** argv)
@@ -110,9 +132,19 @@ int main(int argc, char** argv)
   std::vector<double> rad_array(steps);
   std::vector<double> mass_array(steps);
   std::vector<double> poten_array(steps);
+  std::vector<double> drho_array(steps);
+  std::vector<double> dtworho_array(steps);
   
   
   // need to calc M(<r) from \rho
-
+  makeradius(rad_array, steps, innerr, outerr);
+  makerho(density_array,rad_array, steps, galmass, pluma);
+  massr(density_array, mass_array, rad_array, steps);
+  potental(poten_array, mass_array, rad_array, steps);
+  drhodphi(poten_array, drho_array, density_array, steps);
+  dtworhodphi(poten_array, dtworho_array, density_array, steps);
+  
+  
+  
 
 }
