@@ -6,7 +6,7 @@
 double pi = 3.1415926535;
 double Gconst = 6.674*pow(10.0,-11.0);
 
-void makeradius(std::vector<double>& rad_array, double steps, double innerr, double outerr)
+void makeradius(std::vector<double>& rad_array, unsigned steps, double innerr, double outerr)
 {
   double h = (outerr - innerr)/steps;
   double radius = 0;
@@ -18,7 +18,7 @@ void makeradius(std::vector<double>& rad_array, double steps, double innerr, dou
 }
 
 
-void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, double steps, double galmass, double pluma)
+void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, unsigned steps, double galmass, double pluma)
 {
   double radius = 0;
   for (unsigned i =0; i<steps; ++i)
@@ -28,7 +28,7 @@ void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, 
   }
 }
 
-void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
+void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps)
 {
   //double radius = 0;
   double massr= 0;
@@ -45,19 +45,28 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   }   
 }
 
-void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
+void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps)
 {
   double phin = -1* Gconst * mass_array[0] / rad_array[0];
-  std::cout << "phi_o = " << phin << std::endl;
+  double potenr = 0;
   for (unsigned i =0; i<steps; ++i)
-  {
-    poten_array[i] = Gconst * mass_array[i] /(rad_array[i]) + phin;
+  {                                                                                                                                                                             
+    potenr = 0;
+    for (unsigned j =1; j<(steps-i); ++j)
+      {
+	potenr = potenr + mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
+	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
+      }
+    potenr = Gconst * potenr;
+    poten_array[i] = potenr + phin;
+    //poten_array[i] = 
+    //poten_array[i] = Gconst * mass_array[i] /(rad_array[i]) + phin;
   }
   // Can remove -1 if relative potential?
 }
  
 
-void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array, std::vector<double>& density_array, double steps)
+void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array, std::vector<double>& density_array, unsigned steps)
 {
   drho_array[0] = 0;
   drho_array[steps] = 0;
@@ -68,7 +77,7 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
   
 }
 
-void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, double steps)
+void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
 {
   dtworho_array[0] = 0;
   dtworho_array[steps] = 0;
