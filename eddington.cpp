@@ -34,7 +34,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   double massr= 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    maxradius = rad_array[i];
+    //maxradius = rad_array[i];
     massr = 0;
     for (unsigned j =0; j<(steps-i); ++j)
     {
