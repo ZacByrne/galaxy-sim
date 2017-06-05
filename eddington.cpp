@@ -149,14 +149,14 @@ int main(int argc, char** argv)
   myfile.open (filename.c_str());
   double h = (outerr - innerr)/steps;
   r = 0;
-  //cout << "inerrer = " << innerr <<"  start  = " << start << "  h  =  "<< h <<std::endl;
+
   for (unsigned i =0; i<steps; ++i)
   {
-    myfile << radius_array[i] << "   " << vrarray[i] << "   "<< testvd  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
+    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "\n";
   }
-  //have changed the sigma2 to testvd for tasting purposes in output
+
   myfile.close();
-  //  cout << "r = " << r << std::endl;
+
   return 0;
 
 }
