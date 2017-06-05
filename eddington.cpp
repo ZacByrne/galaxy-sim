@@ -38,7 +38,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
     massr = 0;
     for (unsigned j =0; j<(steps-i); ++j)
     {
-      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2);
+      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2.0);
     }
     massr = 4 * pi * massr;
     mass_array[i] = massr;
@@ -48,9 +48,10 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
 void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
 {
   double phin = -1* Gconst * mass_array[0] / rad_array[0];
+  std::cout << "phi_o = " << phin << std::endl;
   for (unsigned i =0; i<steps; ++i)
   {
-    poten_array[i] = Gconst * mass_array[i] / rad_array[i] + phin;
+    poten_array[i] = Gconst * mass_array[i] /(rad_array[i]) + phin;
   }
   // Can remove -1 if relative potential?
 }
@@ -73,7 +74,8 @@ void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_
   dtworho_array[steps] = 0;
   for (unsigned i =1; i<(steps-1); ++i)
   {
-    dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
+    //dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
+    dtworho_array[i] = ((density_array[(i+1)] - density_array[i])  - (density_array[i] - density_array[(i-1)]))/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
   }      
 }
   
