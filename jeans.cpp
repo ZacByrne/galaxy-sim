@@ -315,10 +315,10 @@ int main(int argc, char** argv)
   {
     r = start + i*h;
     sigma2 = Gconst*galmass / (6*pluma) * pow((1 + pow(r/pluma,2)),-1.0/2.0);
-    sigma3 = pi*sigma2/4.0;
+    sigma3 = 6*3*pi*sigma2/64.0;
     testvd = splint(radarray.data(), vsortarray.data(), vrdarray.data(), radarray.size(), r);
     //    cout <<"vstel  = "<< vsteldelplum(r,galmass, pluma) << std::endl;
-    myfile << r << "   " << vrarray[i] << "   "<< testvd  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
+    myfile << r << "   " << vrarray[i] << "   "<< sigma2  <<"  " << projectarray[(projectarray.size()-i)] << "   " << sigma3 << "\n";
   }
   //have changed the sigma2 to testvd for tasting purposes in output
   myfile.close();
