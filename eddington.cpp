@@ -34,7 +34,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   double massr= 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    maxradius = rad_array[i];
+    //maxradius = rad_array[i];
     massr = 0;
     for (unsigned j =0; j<(steps-i); ++j)
     {
@@ -67,7 +67,7 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
   
 }
 
-void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, double steps);
+void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, double steps)
 {
   dtworho_array[0] = 0;
   dtworho_array[steps] = 0;
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
   using std::cout;
   using std::cin;
   
-  /input values
+  //input values
   cout << "Jean's equation simulation. \n Please input core radius (Kpc)." << std::endl;
   cin >> pluma;
   pluma = pluma*3.086*pow(10.0,19.0);
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
   
   cout << "Please input out integration radius. (Kpc) (similar to radius of galaxy)" << std::endl;
   cin >> outerr;
-  start = start*3.086*pow(10.0,19.0);
+  outerr = outerr*3.086*pow(10.0,19.0);
   //convert to metres
   
   cout << "Please input no. steps" << std::endl;
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
   std::ofstream myfile;
   myfile.open (filename.c_str());
   double h = (outerr - innerr)/steps;
-  r = 0;
+  //r = 0;
 
   for (unsigned i =0; i<steps; ++i)
   {
