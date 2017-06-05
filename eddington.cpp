@@ -30,7 +30,7 @@ void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, 
 
 void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, double steps)
 {
-  double radius = 0;
+  //double radius = 0;
   double massr= 0;
   for (unsigned i =0; i<steps; ++i)
   {
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
-  double h = (outerr - innerr)/steps;
+  //double h = (outerr - innerr)/steps;
   //r = 0;
 
   for (unsigned i =0; i<steps; ++i)
