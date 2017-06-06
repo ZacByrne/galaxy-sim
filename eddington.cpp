@@ -168,10 +168,14 @@ int main(int argc, char** argv)
   myfile.open (filename.c_str());
   //double h = (outerr - innerr)/steps;
   //r = 0;
-
+  double poten = 0;
+  double massen = 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "\n";
+    poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) - poten_array[0];
+    massen =  galmass * pow((1 + pow(rad_array[i]/pluma,-2.0)),-3.0/2.0);
+    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen  << "\n";
+    
   }
 
   myfile.close();
