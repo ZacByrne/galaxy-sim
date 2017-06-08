@@ -175,12 +175,16 @@ int main(int argc, char** argv)
   double poten = 0;
   double massen = 0;
   double potennewt = 0;
+  double firstder = 0;
+  double secder = 0;
   for (unsigned i =0; i<steps; ++i)
   {
     poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) + poten_array[0];
     massen =  galmass * pow((1 + pow(rad_array[i]/pluma,-2.0)),-3.0/2.0);
     potennewt = Gconst * mass_array[i] / pow(rad_array[i],2.0);
-    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << potennewt   << "\n";
+    firstder = -15*pow(pluma,2.0)*pow((poten_array[i]),4) / (4*pi*pow(galmass,4.0) * pow(Gconst,5.0));
+    secder = 15*pow(pluma,2.0)*pow((poten_array[i]),3) / (pi*pow(galmass,4.0) * pow(Gconst,5.0));
+    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << potennewt << "   " << firstder << "    " << secder  << "\n";
     
   }
 
