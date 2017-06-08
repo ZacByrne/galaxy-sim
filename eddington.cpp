@@ -6,15 +6,24 @@
 double pi = 3.1415926535;
 double Gconst = 6.674*pow(10.0,-11.0);
 
-void makeradius(std::vector<double>& rad_array, unsigned steps, double innerr, double outerr)
+void makeradius(std::vector<double>& rad_array, unsigned steps, double innerr, double outerr, double pluma)
 {
-  double h = (outerr - innerr)/steps;
+  double h = (outerr - pluma)/(steps-1000.0);
+  double innerh = (pluma - innerr)/1000.0;
   double radius = 0;
+  //std::cout << "pluma = " << pluma << "  innerr = " << innerr << "  pluma - 999*innerh = " << (pluma-999*innerh) << std::endl;
+
   for (unsigned i =0; i<steps; ++i)
   {
     radius = outerr - i*h;
     rad_array[i]= radius;
   }
+  for (unsigned k = 0; k<1000; ++k)
+    {
+      radius = pluma - k*innerh;
+      rad_array[(steps-1000+k)]=radius;
+    }
+
 }
 
 
@@ -28,7 +37,7 @@ void makerho(std::vector<double>& density_array,std::vector<double>& rad_array, 
   }
 }
 
-void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps, double h)
+void massr(std::vector<double>& density_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps)
 {
   //double radius = 0;
   double massr= 0;
@@ -38,7 +47,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
     massr = 0;
     for (unsigned j =0; j<(steps-i+1); ++j)
     {
-      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2.0) * (h);
+      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2.0) * (rad_array[steps-j]-rad_array[steps-j+1]);
     }
     massr = 4 * pi * massr;
     //+ 4*pi* density_array[(steps)] * pow(rad_array[(steps)],3.0)/3;
@@ -47,7 +56,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   }   
 }
 
-void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps, double h)
+void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps)
 {
   double potenr = 0;
   for (unsigned i =0; i<steps; ++i)
@@ -55,7 +64,7 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
     potenr = 0;
     for (unsigned j =1; j<(steps-i); ++j)
       {
-	potenr = potenr + h*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
+	potenr = potenr + (rad_array[steps-j]-rad_array[steps-j+1])*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
 	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
       }
     potenr = -1*Gconst * potenr;
@@ -115,7 +124,7 @@ int main(int argc, char** argv)
   using std::cin;
   
   //input values
-  cout << "Jean's equation simulation. \n Please input core radius (Kpc)." << std::endl;
+  cout << "Jean's equation simulation. \n Please input plummer radius (Kpc)." << std::endl;
   cin >> pluma;
   pluma = pluma*3.086*pow(10.0,19.0);
   //convert to metres
@@ -160,11 +169,11 @@ int main(int argc, char** argv)
   
   
   // need to calc M(<r) from \rho
-  double h = (outerr - innerr)/steps;    
-  makeradius(rad_array, steps, innerr, outerr);
+  //double h = (outerr - innerr)/steps;    
+  makeradius(rad_array, steps, innerr, outerr, pluma);
   makerho(density_array,rad_array, steps, galmass, pluma);
-  massr(density_array, mass_array, rad_array, steps, h);
-  potental(poten_array, mass_array, rad_array, steps, h);
+  massr(density_array, mass_array, rad_array, steps);
+  potental(poten_array, mass_array, rad_array, steps);
   drhodphi(poten_array, drho_array, density_array, steps);
   dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
