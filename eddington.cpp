@@ -36,14 +36,14 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   {
     //maxradius = rad_array[i];
     massr = 0;
-    for (unsigned j =0; j<(steps-i+1); ++j)
+    for (unsigned j =2; j<(steps-i+1); ++j)
     {
-      massr = massr + density_array[(steps-j)] * pow(rad_array[(steps-j)],2.0) * (h);
+      massr = massr + density_array[(steps-j+1)] * pow(rad_array[(steps-j)],2.0) * (h);
     }
-    massr = 4 * pi * massr;
-    //+ 4*pi* density_array[(steps)] * pow(rad_array[(steps)],3.0)/3;
+    massr = 4 * pi * massr + 4*pi* density_array[(steps-1)] * pow(rad_array[(steps-1)],3.0)/3;
     //massr = massr + 4*pi*pow(rad_array[(steps-1)],3.0)/3*density_array[(steps-1)];
     mass_array[i] = massr;
+    //std::cout << "test" <<std::endl;
   }   
 }
 
@@ -81,23 +81,25 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
 void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array, std::vector<double>& density_array, unsigned steps)
 {
   drho_array[0] = 0;
-  drho_array[steps] = 0;
+  //drho_array[steps] = 0;
   for (unsigned i =1; i<(steps-1); ++i)
   {
     drho_array[i] = (density_array[(i+1)] -  density_array[(i-1)])/(poten_array[(i+1)] - poten_array[(i-1)]);
   }
-  
+  drho_array[steps-1] = drho_array[steps-2];
 }
 
 void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
 {
   dtworho_array[0] = 0;
-  dtworho_array[steps] = 0;
+  //dtworho_array[steps] = 0;
   for (unsigned i =1; i<(steps-1); ++i)
   {
     //dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
     dtworho_array[i] = ((density_array[(i+1)] - density_array[i])  - (density_array[i] - density_array[(i-1)]))/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
-  }      
+  } 
+  dtworho_array[steps-1]=dtworho_array[steps-2];
+  //std::cout << dtworho_array[steps] << "    "  << dtworho_array[steps-1] << std::endl;
 }
   
 
@@ -182,7 +184,7 @@ int main(int argc, char** argv)
   {
     poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) + poten_array[0];
     massen =  galmass * pow((1 + pow(rad_array[i]/pluma,-2.0)),-3.0/2.0);
-    potennewt = Gconst * mass_array[i] / pow(rad_array[i],2.0);
+    potennewt = Gconst * mass_array[i] / pow(rad_array[i],1.0);
     firstder = 15*pow(pluma,2.0)*pow((poten_array[i]),4)/ (4*pi*pow(galmass,4.0)*pow(Gconst,5.0));
     secder = -15*pow(pluma,2.0)*pow((poten_array[i]),3)/ (pi*pow(galmass,4.0)*pow(Gconst,5.0));
     myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << potennewt << "    " << firstder << "    " << secder  << "\n";
