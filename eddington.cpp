@@ -58,6 +58,7 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
 	potenr = potenr + h*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
 	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
       }
+    //potenr = potenr + mass_array[(steps-1)]/rad_array[(steps-1)];
     potenr = -1*Gconst * potenr;
     //std::cout << "Potenr  = " << potenr  << "   phin = " << phin << std::endl; 
     poten_array[i] = potenr;
@@ -67,6 +68,7 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
   
   // Can add -1 at 0
   double phin = poten_array[0];
+  std::cout << "phin = " << phin << std::endl;
   for (unsigned i =0; i<steps; ++i)
   {
     poten_array[i] = poten_array[i]-phin;
@@ -85,6 +87,7 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
   for (unsigned i =1; i<(steps-1); ++i)
   {
     drho_array[i] = (density_array[(i+1)] -  density_array[(i-1)])/(poten_array[(i+1)] - poten_array[(i-1)]);
+    //std::cout << "density_array[(i+1)] = "<<  density_array[i+1] << "   den i-1  = " << density_array[(i-1)] << " pot i+1  = " <<  poten_array[(i+1)] << "  pot i-1  = " <<  poten_array[(i-1)] << "  dif top + " << (density_array[(i+1)] -  density_array[(i-1)]) << "  dif bot  =" << (poten_array[(i+1)] - poten_array[(i-1)]) << std::endl;
   }
   drho_array[steps-1] = drho_array[steps-2];
 }
@@ -182,7 +185,7 @@ int main(int argc, char** argv)
   double secder = 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) + poten_array[0];
+    poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) + 1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[0]/pluma,2)),-1.0/2.0);
     massen =  galmass * pow((1 + pow(rad_array[i]/pluma,-2.0)),-3.0/2.0);
     potennewt = Gconst * mass_array[i] / pow(rad_array[i],1.0);
     firstder = 15*pow(pluma,2.0)*pow((poten_array[i]),4)/ (4*pi*pow(galmass,4.0)*pow(Gconst,5.0));
