@@ -47,7 +47,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
   }   
 }
 
-void potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps, double h)
+double potental(std::vector<double>& poten_array, std::vector<double>& mass_array, std::vector<double>& rad_array, unsigned steps, double h)
 {
   double potenr = 0;
   for (unsigned i =0; i<steps; ++i)
@@ -58,7 +58,7 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
 	potenr = potenr + h*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
 	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
       }
-    //potenr = potenr + mass_array[(steps-1)]/rad_array[(steps-1)];
+    potenr = potenr + mass_array[(steps-1)]/rad_array[(steps-1)];
     potenr = -1*Gconst * potenr;
     //std::cout << "Potenr  = " << potenr  << "   phin = " << phin << std::endl; 
     poten_array[i] = potenr;
@@ -73,7 +73,7 @@ void potental(std::vector<double>& poten_array, std::vector<double>& mass_array,
   {
     poten_array[i] = poten_array[i]-phin;
   }
-
+  return phin;
 
 }
  
@@ -120,19 +120,19 @@ int main(int argc, char** argv)
   using std::cin;
   
   //input values
-  cout << "Jean's equation simulation. \n Please input core radius (Kpc)." << std::endl;
+  cout << "Jean's equation simulation. \n Please input core radius (pc)." << std::endl;
   cin >> pluma;
-  pluma = pluma*3.086*pow(10.0,19.0);
+  pluma = pluma*3.086*pow(10.0,16.0);
   //convert to metres
   
-  cout << "Please inner integration radius (Kpc) (smallest radius for program) " << std::endl;
+  cout << "Please inner integration radius (pc) (smallest radius for program) " << std::endl;
   cin >> innerr;
-  innerr = innerr*3.086*pow(10.0,19.0);
+  innerr = innerr*3.086*pow(10.0,16.0);
   //convert to metres
   
-  cout << "Please input out integration radius. (Kpc) (similar to radius of galaxy)" << std::endl;
+  cout << "Please input out integration radius. (pc) (similar to radius of galaxy)" << std::endl;
   cin >> outerr;
-  outerr = outerr*3.086*pow(10.0,19.0);
+  outerr = outerr*3.086*pow(10.0,16.0);
   //convert to metres
   
   cout << "Please input no. steps" << std::endl;
@@ -162,14 +162,14 @@ int main(int argc, char** argv)
   std::vector<double> poten_array(steps);
   std::vector<double> drho_array(steps);
   std::vector<double> dtworho_array(steps);
-  
+  double phin = 0;
   
   // need to calc M(<r) from \rho
   double h = (outerr - innerr)/steps;    
   makeradius(rad_array, steps, innerr, outerr);
   makerho(density_array,rad_array, steps, galmass, pluma);
   massr(density_array, mass_array, rad_array, steps, h);
-  potental(poten_array, mass_array, rad_array, steps, h);
+  phin = potental(poten_array, mass_array, rad_array, steps, h);
   drhodphi(poten_array, drho_array, density_array, steps);
   dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
@@ -185,7 +185,7 @@ int main(int argc, char** argv)
   double secder = 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) + 1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[0]/pluma,2)),-1.0/2.0);
+    poten =  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i]/pluma,2)),-1.0/2.0) -  1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[0]/pluma,2)),-1.0/2.0);
     massen =  galmass * pow((1 + pow(rad_array[i]/pluma,-2.0)),-3.0/2.0);
     potennewt = Gconst * mass_array[i] / pow(rad_array[i],1.0);
     firstder = 15*pow(pluma,2.0)*pow((poten_array[i]),4)/ (4*pi*pow(galmass,4.0)*pow(Gconst,5.0));
