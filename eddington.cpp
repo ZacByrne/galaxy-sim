@@ -87,10 +87,24 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
   for (unsigned i =1; i<(steps-1); ++i)
   {
     drho_array[i] = (density_array[(i+1)] -  density_array[(i-1)])/(poten_array[(i+1)] - poten_array[(i-1)]);
+
     //std::cout << "density_array[(i+1)] = "<<  density_array[i+1] << "   den i-1  = " << density_array[(i-1)] << " pot i+1  = " <<  poten_array[(i+1)] << "  pot i-1  = " <<  poten_array[(i-1)] << "  dif top + " << (density_array[(i+1)] -  density_array[(i-1)]) << "  dif bot  =" << (poten_array[(i+1)] - poten_array[(i-1)]) << std::endl;
   }
   drho_array[steps-1] = drho_array[steps-2];
 }
+
+void dtest(std::vector<double>& drho_array, std::vector<double> density_array, std::vector<double> rad_array,  unsigned steps, double pluma,double galmass)
+{
+  drho_array[0] = 0;
+  for ( unsigned i =1; i<(steps-1); ++i)
+    {
+      drho_array[i] = (density_array[(i+1)] -  density_array[(i-1)])/(1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i+1]/pluma,2)),-1.0/2.0) - 1 * Gconst * galmass/pluma * pow((1 + pow(rad_array[i-1]/pluma,2)),-1.0/2.0));  
+    }
+  drho_array[steps-1] = drho_array[steps-2];
+
+} 
+
+
 
 void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
 {
@@ -171,6 +185,7 @@ int main(int argc, char** argv)
   massr(density_array, mass_array, rad_array, steps, h);
   phin = potental(poten_array, mass_array, rad_array, steps, h);
   drhodphi(poten_array, drho_array, density_array, steps);
+  //dtest(drho_array, density_array, rad_array,  steps, pluma, galmass);
   dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
   
