@@ -42,7 +42,7 @@ void massr(std::vector<double>& density_array, std::vector<double>& mass_array, 
     massr = 0;
     for (unsigned j =2; j<(steps-i+1); ++j)
     {
-      massr = massr + density_array[(steps-j+1)] * pow((rad_array[(steps-j)]+rad_array[(steps-j+1)])/2,2.0) * (h);
+      massr = massr + density_array[(steps-j+1)] * pow((rad_array[(steps-j)]+rad_array[(steps-j+1)])/2,2.0) * ((rad_array[(steps-j)]-rad_array[(steps-j+1)]));
     }
     massr = 4 * pi * massr + 4*pi* density_array[(steps-1)] * pow(rad_array[(steps-1)],3.0)/3;
     //massr = massr + 4*pi*pow(rad_array[(steps-1)],3.0)/3*density_array[(steps-1)];
@@ -59,7 +59,7 @@ double potental(std::vector<double>& poten_array, std::vector<double>& mass_arra
     potenr = 0;
     for (unsigned j =1; j<(steps-i); ++j)
       {
-	potenr = potenr + h*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
+	potenr = potenr + (rad_array[(steps-j)]-rad_array[(steps-j+1)])*mass_array[(steps-j)] / pow(rad_array[(steps-j)],2.0);
 	//std::cout << "Potenr  = " << potenr  << "  mass r = " << mass_array[(steps-j)] << "  rad_array  = "  << rad_array[(steps-j)] << std::endl;
       }
     potenr = potenr + mass_array[(steps-1)]/rad_array[(steps-1)];
