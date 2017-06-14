@@ -8,12 +8,16 @@ double Gconst = 6.674*pow(10.0,-11.0);
 
 void makeradius(std::vector<double>& rad_array, unsigned steps, double innerr, double outerr)
 {
-  double h = (outerr - innerr)/steps;
+  double loginr = log10(innerr);
+  double logoutr = log10(outerr); 
+  double h = (logoutr - loginr)/steps;
   double radius = 0;
   for (unsigned i =0; i<steps; ++i)
   {
-    radius = outerr - i*h;
-    rad_array[i]= radius;
+    
+    radius = logoutr - i*h;
+
+    rad_array[i]= pow(10.0, radius);
   }
 }
 
