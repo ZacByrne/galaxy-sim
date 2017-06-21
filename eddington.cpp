@@ -128,10 +128,12 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
 //second derviative
 void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
 {
+  // double dvalue = 0.0
   dtworho_array[0] = 0;
   //dtworho_array[steps] = 0;
   for (unsigned i =2; i<(steps-1); ++i)
   {
+    
     //dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
     dtworho_array[i] = ((density_array[(i+1)] - density_array[i])  - (density_array[i] - density_array[(i-1)]))/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
   } 
@@ -203,10 +205,16 @@ int main(int argc, char** argv)
   
   // need to calc M(<r) from \rho
   double h = (outerr - innerr)/steps;    
-  makeradius(rad_array, steps, innerr, outerr);
+  //makeradius(rad_array, steps, innerr, outerr);
+  makelogradius(rad_array, steps, innerr, outerr);
   makerho(density_array,rad_array, steps, galmass, pluma);
   massr(density_array, mass_array, rad_array, steps, h);
   phin = potental(poten_array, mass_array, rad_array, steps, h);
+  
+
+
+
+
   drhodphi(poten_array, drho_array, density_array, steps);
   //dtest(drho_array, density_array, rad_array,  steps, pluma, galmass);
   //unit testing dtwo function
@@ -217,7 +225,10 @@ int main(int argc, char** argv)
       sin_array[i] = sin (rad_array[i]);
     }
 
+  //drhodphi(rad_array, drho_array, sin_array, steps);
+
   //dtworhodphi(rad_array, dtworho_array, sin_array, steps);
+  
   dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
   std::ofstream myfile;
