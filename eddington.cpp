@@ -106,11 +106,12 @@ void drhodphi(std::vector<double>& poten_array, std::vector<double>& drho_array,
   //drho_array[steps] = 0;
   for (unsigned i =2; i<(steps-1); ++i)
   {
-    drho_array[i] = (density_array[i+1] -  density_array[(i-1)])/(poten_array[(i+1)] - poten_array[(i-1)]);
+    drho_array[i] = (density_array[i-1] -  density_array[(i+1)])/(poten_array[(i-1)] - poten_array[(i+1)]);
 
     //std::cout << "density_array[(i+1)] = "<<  density_array[i+1] << "   den i-1  = " << density_array[(i-1)] << " pot i+1  = " <<  poten_array[(i+1)] << "  pot i-1  = " <<  poten_array[(i-1)] << "  dif top + " << (density_array[(i+1)] -  density_array[(i-1)]) << "  dif bot  =" << (poten_array[(i+1)] - poten_array[(i-1)]) << std::endl;
   }
-  drho_array[steps-1] = drho_array[steps-2];
+  drho_array[steps-1] = drho_array[steps-3];
+  drho_array[steps-2] = drho_array[steps-3];
 }
 
 //void dtest(std::vector<double>& drho_array, std::vector<double> density_array, std::vector<double> rad_array,  unsigned steps, double pluma,double galmass)
@@ -134,8 +135,8 @@ void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_
   for (unsigned i =2; i<(steps-1); ++i)
   {
     
-    //dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
-    dtworho_array[i] = ((density_array[(i+1)] - density_array[i])  - (density_array[i] - density_array[(i-1)]))/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
+    dtworho_array[i] = (density_array[(i+1)] +  density_array[(i-1)] - 2*density_array[i])/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
+    //dtworho_array[i] = ((density_array[(i+1)] - density_array[i])  - (density_array[i] - density_array[(i-1)]))/((poten_array[(i-1)] - poten_array[i]) * (poten_array[i] -  poten_array[(i+1)]));
   } 
   dtworho_array[steps-1]=dtworho_array[steps-2];
   //std::cout << dtworho_array[steps] << "    "  << dtworho_array[steps-1] << std::endl;
@@ -225,11 +226,12 @@ int main(int argc, char** argv)
       sin_array[i] = sin (rad_array[i]);
     }
 
-  //drhodphi(rad_array, drho_array, sin_array, steps);
+  //trying first der of first der
+  drhodphi(poten_array, dtworho_array, drho_array, steps);
 
   //dtworhodphi(rad_array, dtworho_array, sin_array, steps);
   
-  dtworhodphi(poten_array, dtworho_array, density_array, steps);
+  //dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
   std::ofstream myfile;
   myfile.open (filename.c_str());
@@ -251,7 +253,7 @@ int main(int argc, char** argv)
     // analytic first derivative
     firstder = 15.0*pow(pluma,2.0)*pow((poten_array[i]),4)/ (4.0*pi*pow(galmass,4.0)*pow(Gconst,5.0));
     // analytic second derivative 
-    secder = -15.0*pow(pluma,2.0)*pow((poten_array[i]),3)/ (pi*pow(galmass,4.0)*pow(Gconst,5.0));
+    secder = 15.0*pow(pluma,2.0)*pow((poten_array[i]),3)/ (pi*pow(galmass,4.0)*pow(Gconst,5.0));
     // output file
     myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << sin_array[i] << "    " << firstder << "    " << secder  << "\n";
   }
