@@ -278,12 +278,12 @@ int main(int argc, char** argv)
   drhodphi(poten_array, drho_array, density_array, steps);
   //dtest(drho_array, density_array, rad_array,  steps, pluma, galmass);
   //unit testing dtwo function
-  std::vector<double> sin_array(steps);
+  //  std::vector<double> sin_array(steps);
 
-  for (unsigned i = 0; i<steps; ++i)
-    {
-      sin_array[i] = sin (rad_array[i]);
-    }
+  //for (unsigned i = 0; i<steps; ++i)
+  //{
+  //  sin_array[i] = sin (rad_array[i]);
+  // }
 
   //trying first der of first der
   drhodphi(poten_array, dtworho_array, drho_array, steps);
@@ -292,6 +292,14 @@ int main(int argc, char** argv)
   
   //dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
+  double dyn1 = 0;
+  double dyn2 = 1.6;
+  std::vector<double> contdtworho_array(steps);
+
+  spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,vrdarray.data());
+
+  
+
   std::ofstream myfile;
   myfile.open (filename.c_str());
   //double h = (outerr - innerr)/steps;
