@@ -74,7 +74,7 @@ void makelogradius(std::vector<double>& rad_array, unsigned steps, double innerr
   for (unsigned i =0; i<steps; ++i)
   {
     
-    radius = logoutr - i*h;
+    radius = loginr + i*h;
 
     rad_array[i]= pow(10.0, radius);
   }
@@ -89,7 +89,7 @@ void makeradius(std::vector<double>& rad_array, unsigned steps, double innerr, d
   for (unsigned i =0; i<steps; ++i)
     {
 
-      radius = outerr - i*h;
+      radius = innerr + i*h;
 
       rad_array[i]=  radius;
     }
