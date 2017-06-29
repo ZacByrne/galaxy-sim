@@ -203,7 +203,32 @@ void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_
 
 
  
-//void funcedd(
+void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
+{
+  double gaussum = 0.0;
+  double xi = 0.0;
+  double fxi = 0.0;
+
+  // weighting for gauss
+  double wxi = pi / steps;
+
+  double gaussi = 0.0;
+  for (unsigned i = 1; i<(steps+1);++i)
+    {
+      //calc xi at i
+      xi = cos((2.0*i-1)*pi/(2*steps));
+      //spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
+      dtworhoxi = splint(poten_array.data(), dtworho_rarray.data(), contdtworho_array.data(), poten_array.size(), xi);
+      fxi = 2*xi*dtworhoxi;
+      gaussi =  fxi;
+      gaussum = gaussum + gaussi;
+    }
+  //wxi is same for all values of i
+  gaussum = gaussum*wxi;
+
+}
+
+
 
 int main(int argc, char** argv)
 {
@@ -296,7 +321,7 @@ int main(int argc, char** argv)
   double dyn2 = 1.6;
   std::vector<double> contdtworho_array(steps);
 
-  spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,vrdarray.data());
+  spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
 
   
 
