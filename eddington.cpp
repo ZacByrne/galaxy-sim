@@ -203,11 +203,15 @@ void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_
 
 
  
-void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& density_array, unsigned steps)
+void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& contdtworho_array.data(), unsigned steps)
 {
   double gaussum = 0.0;
+  // xi = gaussian cehb x
+  // ti, rescaled variable so goes to -1 to 1
+  // fxi is function(x) in gaussian
   double xi = 0.0;
   double fxi = 0.0;
+  double ti = 0.0;
 
   // weighting for gauss
   double wxi = pi / steps;
@@ -217,9 +221,11 @@ void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_ar
     {
       //calc xi at i
       xi = cos((2.0*i-1)*pi/(2*steps));
+      ti = (maxen*pow(xi,2.0)+maxen)2.0
       //spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
       dtworhoxi = splint(poten_array.data(), dtworho_rarray.data(), contdtworho_array.data(), poten_array.size(), xi);
       fxi = 2*xi*dtworhoxi;
+      // gauss = /sum wi * fxi
       gaussi =  fxi;
       gaussum = gaussum + gaussi;
     }
