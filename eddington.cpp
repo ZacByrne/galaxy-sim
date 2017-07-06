@@ -203,7 +203,7 @@ void dtworhodphi(std::vector<double>& poten_array, std::vector<double>& dtworho_
 
 
  
-void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& contdtworho_array.data(), unsigned steps)
+double gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_array, std::vector<double>& contdtworho_array, unsigned steps, double maxen)
 {
   double gaussum = 0.0;
   // xi = gaussian cehb x
@@ -212,6 +212,8 @@ void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_ar
   double xi = 0.0;
   double fxi = 0.0;
   double ti = 0.0;
+  steps = steps/10;
+  double dtworhoxi = 0.0;
 
   // weighting for gauss
   double wxi = pi / steps;
@@ -220,20 +222,49 @@ void gausscheb(std::vector<double>& poten_array, std::vector<double>& dtworho_ar
   for (unsigned i = 1; i<(steps+1);++i)
     {
       //calc xi at i
-      xi = cos((2.0*i-1)*pi/(2*steps));
-      ti = (maxen*pow(xi,2.0)+maxen)2.0
+      xi = cos((2.0*i-1.0)*pi/(2*steps));
+      //xi = cos((2.0i-1.0)*pi/(4*steps));
+      ti = (maxen*pow(xi,1.0)+maxen)/2.0;
+      //ti = maxen*xi;
       //spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
-      dtworhoxi = splint(poten_array.data(), dtworho_rarray.data(), contdtworho_array.data(), poten_array.size(), xi);
-      fxi = 2*xi*dtworhoxi;
+      dtworhoxi = splint(poten_array.data(), dtworho_array.data(), contdtworho_array.data(), poten_array.size(), fabs(ti));
+      fxi = fabs(dtworhoxi)*(pow((maxen/2),0.5)) *pow((1+xi),0.5);
       // gauss = /sum wi * fxi
       gaussi =  fxi;
       gaussum = gaussum + gaussi;
+      //std::cout << "Plint fxi = "<< fxi << "  xi = " << xi << "  ti  = "  << ti << std::endl;
     }
   //wxi is same for all values of i
   gaussum = gaussum*wxi;
-
+  //std::cout << "sum = "<< gaussum << "  wi = " << wxi << std::endl;
+  return gaussum;
 }
 
+void fedding(std::vector<double> poten_array, std::vector<double> dtworho_array, std::vector<double> contdtworho_array,std::vector<double>& fedd_array, unsigned steps, double minen)
+{
+  
+  double fe = 0.0;
+  double maxen;
+  
+  for (unsigned i = 0; i<(steps);++i)
+    {
+      //std::cout << "test"<< i << std::endl;
+      //Pass through e value
+      maxen = poten_array[i];
+      //calc eddington formula
+      fe = 1/(pow(8.0,0.5)*pow(pi,2.0))* (gausscheb(poten_array, dtworho_array, contdtworho_array, steps, maxen) + minen);
+      fedd_array[i] = fe;
+      //std::cout << "Maxen = "<< maxen << "  dtworho at maxen = " << (splint(poten_array.data(), dtworho_array.data(), contdtworho_array.data(), poten_array.size(),maxen)) << std::endl;
+    }
+  fedd_array[steps-1] = fedd_array[steps-2];
+  //std::cout << "steps and steps -1 = " <<  fedd_array[steps] << "   "<< fedd_array[steps-1] << std::endl; 
+}
+
+
+//void rectant()
+//{
+  //  double rect = 0.0;
+  //}
 
 
 int main(int argc, char** argv)
@@ -309,12 +340,12 @@ int main(int argc, char** argv)
   drhodphi(poten_array, drho_array, density_array, steps);
   //dtest(drho_array, density_array, rad_array,  steps, pluma, galmass);
   //unit testing dtwo function
-  //  std::vector<double> sin_array(steps);
+  std::vector<double> sin_array(steps);
 
-  //for (unsigned i = 0; i<steps; ++i)
-  //{
-  //  sin_array[i] = sin (rad_array[i]);
-  // }
+  for (unsigned i = 0; i<steps; ++i)
+  {
+    sin_array[i] = sin (rad_array[i]);
+  }
 
   //trying first der of first der
   drhodphi(poten_array, dtworho_array, drho_array, steps);
@@ -329,7 +360,13 @@ int main(int argc, char** argv)
 
   spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
 
-  
+  //eddington function
+  std::vector<double> fedd_array(steps);
+  double minen = poten_array[3];
+  std::cout << minen << std::endl;
+  fedding(poten_array, dtworho_array, contdtworho_array, fedd_array, steps,minen);
+
+
 
   std::ofstream myfile;
   myfile.open (filename.c_str());
@@ -340,6 +377,8 @@ int main(int argc, char** argv)
   double potennewt = 0.0;
   double firstder = 0.0;
   double secder = 0.0;
+  double eddan = 0.0;
+  double lmass = 1.0;
   for (unsigned i =0; i<steps; ++i)
   {
     //analy potential
@@ -352,8 +391,14 @@ int main(int argc, char** argv)
     firstder = 15.0*pow(pluma,2.0)*pow((poten_array[i]),4)/ (4.0*pi*pow(galmass,4.0)*pow(Gconst,5.0));
     // analytic second derivative 
     secder = 15.0*pow(pluma,2.0)*pow((poten_array[i]),3)/ (pi*pow(galmass,4.0)*pow(Gconst,5.0));
+    
+    //eddington
+    
+    eddan = 3.0*pow(2.0, 7.0/2.0)* pow(pluma, 2.0) / (7.0*pow(pi,3.0) *pow(Gconst, 5.0) * pow(galmass,4.0) * lmass) * pow(( poten),7.0/2.0); 
+
     // output file
-    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << sin_array[i] << "    " << firstder << "    " << secder  << "\n";
+
+    myfile << rad_array[i] << "   " << density_array[i] << "   "<< mass_array[i]  <<"  " << poten_array[i] << "   " << drho_array[i] << "   " << dtworho_array[i] << "    "<< poten << "   " << massen << "   " << fedd_array[i] << "    " << firstder << "    " << secder << "    " << eddan  << "\n";
   }
 
   myfile.close();
