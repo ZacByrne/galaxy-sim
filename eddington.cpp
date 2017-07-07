@@ -252,7 +252,7 @@ void fedding(std::vector<double> poten_array, std::vector<double> dtworho_array,
       //Pass through e value
       maxen = poten_array[i];
       //calc eddington formula
-      fe = 1/(pow(8.0,0.5)*pow(pi,2.0))* (gausscheb(poten_array, dtworho_array, contdtworho_array, steps, maxen) + minen);
+      fe = 1/(pow(8.0,0.5)*pow(pi,2.0))* (gausscheb(poten_array, dtworho_array, contdtworho_array, steps, maxen)); // adding in density  = 0 point?  + minen);
       fedd_array[i] = fe;
       //std::cout << "Maxen = "<< maxen << "  dtworho at maxen = " << (splint(poten_array.data(), dtworho_array.data(), contdtworho_array.data(), poten_array.size(),maxen)) << std::endl;
     }
@@ -334,7 +334,22 @@ int main(int argc, char** argv)
   phin = potental(poten_array, mass_array, rad_array, steps, h);
   
 
+  //redoing drho and dtworho with spline / splint functions
+  double dyn1 = 0;
+  double dyn2 = 1.189;
 
+  //std::vector<double> conddrho_array(steps);
+  
+  //spline(poten_array.data(), density_array.data(), (poten_array.size()), dyn1, dyn2, conddrho_array.data());
+
+  // drhodphi(poten_array, drho_array, density_array, steps);
+
+  
+
+  dyn1 = 0;
+  dyn2 = 4.776;
+
+  //spline(poten_array.data(), drho_array.data(), (poten_array.size()), dyn1, dyn2, dtworho_array.data());
 
 
   drhodphi(poten_array, drho_array, density_array, steps);
@@ -342,10 +357,10 @@ int main(int argc, char** argv)
   //unit testing dtwo function
   std::vector<double> sin_array(steps);
 
-  for (unsigned i = 0; i<steps; ++i)
-  {
-    sin_array[i] = sin (rad_array[i]);
-  }
+  //for (unsigned i = 0; i<steps; ++i)
+  //{
+    // sin_array[i] = sin (rad_array[i]);
+    //}
 
   //trying first der of first der
   drhodphi(poten_array, dtworho_array, drho_array, steps);
@@ -354,9 +369,11 @@ int main(int argc, char** argv)
   
   //dtworhodphi(poten_array, dtworho_array, density_array, steps);
   
-  double dyn1 = 0;
-  double dyn2 = 1.6;
+  dyn1 = 0;
+  dyn2 = 1.6;
   std::vector<double> contdtworho_array(steps);
+
+  
 
   spline(poten_array.data(), dtworho_array.data(), (poten_array.size()), dyn1, dyn2,contdtworho_array.data());
 
